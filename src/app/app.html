@@ -4,8 +4,11 @@
     <div class="alert d-flex align-items-center gap-2 m-3"
          [ngClass]="carregando ? (demorandoMais ? 'alert-warning' : 'alert-info') : 'alert-secondary'">
       <div *ngIf="carregando" class="spinner-border spinner-border-sm"></div>
-      <span *ngIf="!carregando">
+      <span *ngIf="!carregando && !inputTexto">
         <strong>Atenção:</strong> Cada mensagem é processada de maneira individual, o histórico não é considerado durante a geração da resposta.
+      </span>
+      <span *ngIf="!carregando && inputTexto">
+        Pressione <strong>Ctrl+Enter</strong> ou clique em <strong>Enviar</strong> para enviar a mensagem.
       </span>
       <span *ngIf="carregando">
         {{ demorandoMais ? 'Levando mais tempo que o esperado...' : 'Aguardando resposta...' }}
