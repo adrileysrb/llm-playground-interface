@@ -1,7 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 
 interface Mensagem {
   texto: string;
@@ -10,26 +10,56 @@ interface Mensagem {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FormsModule, NgClass, NgFor],
+  imports: [RouterOutlet, FormsModule, NgClass, NgFor, NgIf],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  protected readonly title = signal('ll-playground');
+export class App implements OnDestroy {
 
   mensagens: Mensagem[] = [];
   inputTexto = '';
+  carregando = false;
+  demorandoMais = false;
+
+  private timeoutDemora: ReturnType<typeof setTimeout> | null = null;
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   enviar() {
     const texto = this.inputTexto.trim();
-    if (!texto) return;
+    if (!texto || this.carregando) return;
 
-    this.mensagens.push({ texto, origem: 'usuario' });
+    this.mensagens = [...this.mensagens, { texto, origem: 'usuario' }];
     this.inputTexto = '';
+    this.iniciarCarregamento();
 
     // resposta simulada — substituir pela chamada à API
     setTimeout(() => {
-      this.mensagens.push({ texto: 'Resposta do assistente...', origem: 'assistente' });
-    }, 500);
+      this.mensagens = [...this.mensagens, { texto: 'Resposta do assistente...', origem: 'assistente' }];
+      this.pararCarregamento();
+    }, 5000);
+  }
+
+  private iniciarCarregamento() {
+    this.carregando = true;
+    this.demorandoMais = false;
+    this.timeoutDemora = setTimeout(() => {
+      this.demorandoMais = true;
+      this.cdr.detectChanges();
+    }, 3000);
+  }
+
+  private pararCarregamento() {
+    this.carregando = false;
+    this.demorandoMais = false;
+    if (this.timeoutDemora) {
+      clearTimeout(this.timeoutDemora);
+      this.timeoutDemora = null;
+    }
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy() {
+    this.pararCarregamento();
   }
 }
