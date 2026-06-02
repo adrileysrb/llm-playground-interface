@@ -27,12 +27,18 @@ export class App implements OnDestroy {
 
   constructor(private cdr: ChangeDetectorRef) {}
 
-  enviar() {
+  ajustarAltura(el: HTMLTextAreaElement) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  enviar(el?: HTMLTextAreaElement) {
     const texto = this.inputTexto.trim();
     if (!texto || this.carregando) return;
 
     this.mensagens = [...this.mensagens, { texto, origem: 'usuario' }];
     this.inputTexto = '';
+    if (el) { el.style.height = 'auto'; }
     this.iniciarCarregamento();
 
     // resposta simulada — substituir pela chamada à API

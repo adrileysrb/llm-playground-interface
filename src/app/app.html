@@ -38,11 +38,16 @@
         </div>
 
         <!-- input + botão -->
-        <div class="d-flex gap-2">
-          <input type="text" class="form-control" placeholder="Digite sua mensagem..."
-                 [(ngModel)]="inputTexto"
-            (keydown.enter)="enviar()" />
-          <button class="btn btn-primary" (click)="enviar()">Enviar</button>
+        <div class="d-flex gap-2 align-items-end">
+          <textarea #inputArea
+                    class="form-control"
+                    placeholder="Digite sua mensagem... (Ctrl+Enter para enviar)"
+                    [(ngModel)]="inputTexto"
+                    (input)="ajustarAltura(inputArea)"
+                    (keydown.control.enter)="enviar(inputArea)"
+                    rows="1"
+                    style="resize: none; overflow-y: auto; max-height: 150px"></textarea>
+          <button class="btn btn-primary" (click)="enviar(inputArea)">Enviar</button>
         </div>
 
       </div>
