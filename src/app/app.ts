@@ -6,6 +6,8 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 interface Mensagem {
   texto: string;
   origem: 'usuario' | 'assistente';
+  raciocinio?: string;
+  mostrarRaciocinio?: boolean;
 }
 
 @Component({
@@ -35,7 +37,12 @@ export class App implements OnDestroy {
 
     // resposta simulada — substituir pela chamada à API
     setTimeout(() => {
-      this.mensagens = [...this.mensagens, { texto: 'Resposta do assistente...', origem: 'assistente' }];
+      this.mensagens = [...this.mensagens, {
+        texto: 'Resposta do assistente...',
+        origem: 'assistente',
+        raciocinio: 'Primeiro analisei o contexto da pergunta, depois considerei as possíveis abordagens e escolhi a mais direta.',
+        mostrarRaciocinio: false
+      }];
       this.pararCarregamento();
     }, 5000);
   }

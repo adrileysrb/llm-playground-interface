@@ -13,13 +13,26 @@
         <div class="flex-grow-1 overflow-auto p-3 bg-light border rounded mb-2">
 
           <div *ngFor="let msg of mensagens"
-               class="d-flex mb-2"
-            [ngClass]="msg.origem === 'usuario' ? 'justify-content-end' : 'justify-content-start'">
+               class="d-flex flex-column mb-2"
+               [ngClass]="msg.origem === 'usuario' ? 'align-items-end' : 'align-items-start'">
+
             <div class="rounded p-2"
                  [ngClass]="msg.origem === 'usuario' ? 'bg-primary text-white' : 'bg-white border'"
-              style="max-width: 75%">
+                 style="max-width: 75%">
               {{ msg.texto }}
             </div>
+
+            <div *ngIf="msg.raciocinio" style="max-width: 75%">
+              <button class="btn btn-link btn-sm p-0 text-secondary"
+                      (click)="msg.mostrarRaciocinio = !msg.mostrarRaciocinio">
+                {{ msg.mostrarRaciocinio ? '▲ Ocultar raciocínio' : '▼ Ver raciocínio' }}
+              </button>
+              <div *ngIf="msg.mostrarRaciocinio"
+                   class="bg-light border rounded p-2 mt-1 text-muted fst-italic small">
+                {{ msg.raciocinio }}
+              </div>
+            </div>
+
           </div>
 
         </div>
